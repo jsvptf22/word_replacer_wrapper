@@ -3,6 +3,13 @@
     "description": "realiza reemplazo de palabras en plantillas de word y realiza la conversion del archivo final a extensiones requeridas como pdf",
     "type": "library",
     "license": "MIT",
+    "version": "1.0.0",
+    "minimum-stability": "stable",
+    "keywords": [
+        "PHP",
+        "WORD"
+    ],
+    "homepage": "https://github.com/jsvptf22/word_replacer_wrapper",
     "authors": [
         {
             "name": "jhon sebastian valencia",

@@ -1,10 +1,16 @@
 # word_replacer_wrapper
+
 replace words on docx files and converts to pdf
 
 install with
+
     composer require jhon/word_replacer_wrapper
-    
-    
+
+# Dependencies
+
+    You need to install LibreOffice.
+
+# Usage
 
 you must include vendor/autoload.php
 
@@ -13,9 +19,6 @@ you must include vendor/autoload.php
 class namespace
 
     use Jsvptf\WordReplacerWrapper\WordReplacerWrapper;
-
-
-
 
 default configuration
 
@@ -44,8 +47,6 @@ default configuration
       string(26) "testOne/document_test.docx"
     ["pdf"]=>
       string(25) "testOne/document_test.pdf"
-
-
 
 dinamic configuration
 
