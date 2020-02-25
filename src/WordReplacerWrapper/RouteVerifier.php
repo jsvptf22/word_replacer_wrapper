@@ -13,12 +13,13 @@ class RouteVerifier
      * template file verifications
      *
      * @param string $fileRoute
+     * @param array $acceptedExtensions
      * @return boolean
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @throws WordReplacerWrapperException
+     * @throws Exception
      * @date 2020
+     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      */
-    public static function checkFile(string $fileRoute, array $aceptedExtensions = [])
+    public static function checkFile(string $fileRoute, array $acceptedExtensions = [])
     {
         if (!is_file($fileRoute)) {
             throw new Exception("The file does not exists", 1);
@@ -26,7 +27,7 @@ class RouteVerifier
 
         $extension = pathinfo($fileRoute, PATHINFO_EXTENSION);
 
-        if (!in_array($extension, $aceptedExtensions)) {
+        if (!in_array($extension, $acceptedExtensions)) {
             throw new Exception("Invalid file extension", 1);
         }
 
@@ -41,10 +42,9 @@ class RouteVerifier
     /**
      * template file verifications
      *
-     * @param string $fileRoute
+     * @param string $directory
      * @return boolean
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * @throws WordReplacerWrapperException
      * @date 2020
      */
     public static function checkDirectory(string $directory)

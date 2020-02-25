@@ -2,11 +2,14 @@
 
 namespace Jsvptf\WordReplacerWrapper;
 
-use Jsvptf\WordReplacerWrapper\RouteVerifier;
-use Gaufrette\Filesystem;
+use Exception;
 use Gaufrette\Adapter\Local as LocalAdapter;
-use PhpOffice\PhpWord\TemplateProcessor;
+use Gaufrette\Filesystem;
 use NcJoes\OfficeConverter\OfficeConverter;
+use NcJoes\OfficeConverter\OfficeConverterException;
+use PhpOffice\PhpWord\Exception\CopyFileException;
+use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class WordReplacerWrapper
 {
@@ -18,7 +21,7 @@ class WordReplacerWrapper
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
-    protected $Filesystem;
+    protected Filesystem $Filesystem;
 
     /**
      * route to template
@@ -27,7 +30,7 @@ class WordReplacerWrapper
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
-    protected $templateRoute;
+    protected string $templateRoute;
 
     /**
      * directory to save files
@@ -36,7 +39,7 @@ class WordReplacerWrapper
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
-    protected $temporalDir;
+    protected string $temporalDir;
 
     /**
      * data to replace
@@ -45,14 +48,15 @@ class WordReplacerWrapper
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
-    protected $data;
+    protected array $data;
 
     /**
      * initial configuration
      *
      * @param string $templateRoute
      * @param array $data
-     * @return void
+     * @param string|null $temporalDir
+     * @throws Exception
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
@@ -60,7 +64,8 @@ class WordReplacerWrapper
         string $templateRoute,
         array $data = [],
         string $temporalDir = null
-    ) {
+    )
+    {
         $this->setTemporalDir($temporalDir);
         $this->setTemplate($templateRoute);
         $this->setData($data);
@@ -91,14 +96,15 @@ class WordReplacerWrapper
      * define the template route
      *
      * @param string $templateRoute
-     * @return void
+     * @return bool
+     * @throws Exception
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
-     * 
+     *
      * @date 2020
      */
     public function setTemplate(string $templateRoute)
     {
-        if (RouteVerifier::checkFile($templateRoute, self::aceptedExtensions())) {
+        if (RouteVerifier::checkFile($templateRoute, self::acceptedExtensions())) {
             $this->templateRoute = $templateRoute;
         }
 
@@ -109,7 +115,7 @@ class WordReplacerWrapper
      * define data to replace
      *
      * @param array $data
-     * @return boolean
+     * @return array
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
@@ -121,7 +127,10 @@ class WordReplacerWrapper
     /**
      * make a document based on template
      *
-     * @return boolean
+     * @return array
+     * @throws CopyFileException
+     * @throws CreateTemporaryFileException
+     * @throws OfficeConverterException
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
@@ -162,6 +171,8 @@ class WordReplacerWrapper
      *
      * @param string $template
      * @return string
+     * @throws CopyFileException
+     * @throws CreateTemporaryFileException
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
@@ -181,7 +192,8 @@ class WordReplacerWrapper
      * converts document to pdf and html
      *
      * @param string $document
-     * @return array
+     * @return string
+     * @throws OfficeConverterException
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
@@ -198,13 +210,13 @@ class WordReplacerWrapper
     }
 
     /**
-     * acepted template extensions
+     * accepted template extensions
      *
      * @return array
      * @author jhon sebastian valencia <jhon.valencia@cerok.com>
      * @date 2020
      */
-    public static function aceptedExtensions()
+    public static function acceptedExtensions()
     {
         return ['docx'];
     }
