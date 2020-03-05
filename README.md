@@ -1,6 +1,7 @@
-# word_replacer_wrapper
+# word replacer wrapper
 
-replace words on docx files and converts to pdf
+replace words on .docx files and convert to pdf
+
 
 install with
 
@@ -12,24 +13,39 @@ install with
 
 # Usage
 
-you must include vendor/autoload.php
+You must include vendor/autoload.php
 
     require __DIR__ . '/vendor/autoload.php';
 
-class namespace
+Class namespace
 
     use Jsvptf\WordReplacerWrapper\WordReplacerWrapper;
 
-default configuration
+Default configuration
 
     //template to process
     $template = 'templateDirectory/test.docx';
 
-    //define data to convert
+#Define data to convert
+    
+    //array of ITypeTableChild elements
+    $tableData = [
+            [
+                new Text('a'),
+                new Text('b'),
+            ],
+            [
+                new Text('d'),
+                new Table($nestedTableData),
+            ]
+    ];
+    
+    //default configuration, array of IType elements
+     
     $data = [
-        'field1' => 'text to replace on field1',
-        'field2' => 'text to replace on field2',
-        'field3' => 'text to replace on field3',
+        'field1' => new Text('xxxxxxxxxxx'),
+        'field2' => new Table($tableData),
+        'field3' => new Image('./images/test.png', 80, 80),
     ];
 
     //folder for create files
@@ -48,9 +64,9 @@ default configuration
     ["pdf"]=>
       string(25) "testOne/document_test.pdf"
 
-dinamic configuration
+#Dinamic configuration
 
-    $WordReplacerWrapper->setData(['field1' => 'sebastian']);
+    $WordReplacerWrapper->setData(['field1' => new Text('sebastian')]);
     $WordReplacerWrapper->setTemporalDir('testTwo');
     $routes = $WordReplacerWrapper->replaceData();
 
@@ -61,3 +77,5 @@ dinamic configuration
       string(26) "testTwo/document_test.docx"
     ["pdf"]=>
       string(25) "testTwo/document_test.pdf"
+
+You can find the complete example on example directory

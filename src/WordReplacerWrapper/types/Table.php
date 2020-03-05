@@ -4,6 +4,7 @@
 namespace Jsvptf\WordReplacerWrapper\types;
 
 
+use Exception;
 use PhpOffice\PhpWord\Element\Cell;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -17,6 +18,7 @@ class Table implements IType, ITypeTableChild
     /**
      * Table constructor.
      * @param array $data
+     * @throws Exception
      */
     public function __construct(array $data)
     {
@@ -33,14 +35,14 @@ class Table implements IType, ITypeTableChild
 
     /**
      * @param array $data
-     * @throws \Exception
+     * @throws Exception
      */
     public function setData(array $data): void
     {
         foreach ($data as $rowKey => $row){
             foreach ($row as $cellKey => $element){
                 if(!$element instanceof ITypeTableChild){
-                    throw new \Exception("Invalid ITypeTableChild element {$rowKey} - {$cellKey}");
+                    throw new Exception("Invalid ITypeTableChild element {$rowKey} - {$cellKey}");
                 }
             }
         }
@@ -83,5 +85,5 @@ class Table implements IType, ITypeTableChild
                 $element->setToCell($Cell);
             }
         }
-}
+    }
 }
