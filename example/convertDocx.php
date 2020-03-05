@@ -1,5 +1,6 @@
 <?php
 
+use Jsvptf\WordReplacerWrapper\types\Image;
 use Jsvptf\WordReplacerWrapper\types\Table;
 use Jsvptf\WordReplacerWrapper\types\Text;
 use Jsvptf\WordReplacerWrapper\WordReplacerWrapper;
@@ -7,6 +8,30 @@ use Jsvptf\WordReplacerWrapper\WordReplacerWrapper;
 require __DIR__ . '/../vendor/autoload.php';
 
 try {
+    $nestedTableData = [
+    [
+        new Text('a'),
+        new Image('./images/test.png', 80, 80),
+        new Text('c'),
+    ],
+        [
+            new Text('d'),
+            new Table([
+                [
+                    new Text('x'),
+                    new Text('y'),
+                    new Text('z'),
+                ],
+                [
+                    new Text('q'),
+                    new Image('./images/test.png', 180, 180),
+                    new Text('y'),
+                ]
+            ]),
+            new Text('f'),
+        ]
+    ];
+
     $tableData = [
         [
             new Text('a'),
@@ -15,7 +40,7 @@ try {
         ],
         [
             new Text('d'),
-            new Text('e'),
+            new Table($nestedTableData),
             new Text('f'),
         ]
     ];
@@ -23,7 +48,7 @@ try {
     $data = [
         'field1' => new Text('xxxxxxxxxxx'),
         'field2' => new Table($tableData),
-        'field3' => new Text('zzzzzzzzzzz'),
+        'field3' => new Image('./images/test.png', 80, 80),
     ];
 
     $WordReplacerWrapper = new WordReplacerWrapper('templateDirectory/test.docx', $data, 'prueba1');

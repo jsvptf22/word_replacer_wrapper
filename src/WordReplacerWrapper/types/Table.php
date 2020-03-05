@@ -4,10 +4,10 @@
 namespace Jsvptf\WordReplacerWrapper\types;
 
 
-use PhpOffice\PhpWord\SimpleType\TblWidth;
+use PhpOffice\PhpWord\Element\Cell;
 use PhpOffice\PhpWord\TemplateProcessor;
 
-class Table implements IType
+class Table implements IType, ITypeTableChild
 {
     /**
      * @var array
@@ -52,15 +52,36 @@ class Table implements IType
      */
     public function setTo(TemplateProcessor &$templateProcessor, string $key)
     {
-        $Table = new \PhpOffice\PhpWord\Element\Table(array('borderSize' => 12, 'borderColor' => 'green'));
-        foreach ($this->getData() as $rowKey => $row){
-            $Row = $Table->addRow();
-            foreach ($row as $cellKey => $element){
-                $Cell = $Row->addCell(1);
-                $element->setToCell($Cell, $key);
-            }
-        }
+        $Table = new \PhpOffice\PhpWord\Element\Table();
+        $this->generateTable($Table);
 
         $templateProcessor->setComplexBlock($key, $Table);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setToCell(Cell &$Cell)
+    {
+        $Table = $Cell->addTable();
+        $this->generateTable($Table);
+    }
+
+    /**
+     * ${CARET}
+     * @param \PhpOffice\PhpWord\Element\Table $Table
+     * @return void
+     * @date 2020-03-05
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    protected function generateTable(\PhpOffice\PhpWord\Element\Table $Table): void
+    {
+        foreach ($this->getData() as $rowKey => $row) {
+            $Row = $Table->addRow();
+            foreach ($row as $cellKey => $element) {
+                $Cell = $Row->addCell(1);
+                $element->setToCell($Cell);
+            }
+        }
+}
 }
