@@ -4,9 +4,10 @@
 namespace Jsvptf\WordReplacerWrapper\types;
 
 
+use PhpOffice\PhpWord\Element\Cell;
 use PhpOffice\PhpWord\TemplateProcessor;
 
-class Text implements IType
+class Text implements IType, ITypeTableChild
 {
     /**
      * @var string
@@ -41,5 +42,14 @@ class Text implements IType
     {
         $value = $this->getText();
         $templateProcessor->setValue($key, $value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setToCell(Cell &$Cell)
+    {
+        $text = $this->getText();
+        $Cell->addText($text);
     }
 }
