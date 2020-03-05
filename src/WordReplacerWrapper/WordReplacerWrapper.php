@@ -18,7 +18,7 @@ class WordReplacerWrapper
      * instance of Filesystem
      *
      * @var Filesystem
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     protected Filesystem $Filesystem;
@@ -27,7 +27,7 @@ class WordReplacerWrapper
      * route to template
      *
      * @var string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     protected string $templateRoute;
@@ -36,7 +36,7 @@ class WordReplacerWrapper
      * directory to save files
      *
      * @var string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     protected string $temporalDir;
@@ -45,7 +45,7 @@ class WordReplacerWrapper
      * data to replace
      *
      * @var array
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     protected array $data;
@@ -57,7 +57,7 @@ class WordReplacerWrapper
      * @param array $data
      * @param string|null $temporalDir
      * @throws Exception
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public function __construct(
@@ -76,7 +76,7 @@ class WordReplacerWrapper
      *
      * @param string $temporalDir
      * @return boolean
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public function setTemporalDir(string $temporalDir = null)
@@ -98,7 +98,7 @@ class WordReplacerWrapper
      * @param string $templateRoute
      * @return bool
      * @throws Exception
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      *
      * @date 2020
      */
@@ -116,7 +116,7 @@ class WordReplacerWrapper
      *
      * @param array $data
      * @return array
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public function setData(array $data)
@@ -131,7 +131,7 @@ class WordReplacerWrapper
      * @throws CopyFileException
      * @throws CreateTemporaryFileException
      * @throws OfficeConverterException
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public function replaceData()
@@ -151,7 +151,7 @@ class WordReplacerWrapper
      * copy template to temporal directory
      *
      * @return string
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public function generateTemporalTemplate()
@@ -173,7 +173,7 @@ class WordReplacerWrapper
      * @return string
      * @throws CopyFileException
      * @throws CreateTemporaryFileException
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public function processTemplate(string $template)
@@ -191,7 +191,7 @@ class WordReplacerWrapper
      * @param string $document
      * @return string
      * @throws OfficeConverterException
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     protected function convertDocument(string $document)
@@ -210,7 +210,7 @@ class WordReplacerWrapper
      * accepted template extensions
      *
      * @return array
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public static function acceptedExtensions()

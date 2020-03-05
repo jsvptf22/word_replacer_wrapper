@@ -17,7 +17,7 @@ class RouteVerifier
      * @return boolean
      * @throws Exception
      * @date 2020
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      */
     public static function checkFile(string $fileRoute, array $acceptedExtensions = [])
     {
@@ -44,7 +44,7 @@ class RouteVerifier
      *
      * @param string $directory
      * @return boolean
-     * @author jhon sebastian valencia <jhon.valencia@cerok.com>
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public static function checkDirectory(string $directory)
