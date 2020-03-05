@@ -1,5 +1,6 @@
 <?php
 
+use Jsvptf\WordReplacerWrapper\types\Text;
 use Jsvptf\WordReplacerWrapper\WordReplacerWrapper;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -7,9 +8,9 @@ require __DIR__ . '/../vendor/autoload.php';
 try {
     //default configuration
     $data = [
-        'field1' => 'xxxxxxxxxxx',
-        'field2' => 'yyyyyyyyyyy',
-        'field3' => 'zzzzzzzzzzz',
+        'field1' => new Text('xxxxxxxxxxx'),
+        'field2' => new Text('yyyyyyyyyyy'),
+        'field3' => new Text('zzzzzzzzzzz'),
     ];
 
     $WordReplacerWrapper = new WordReplacerWrapper('templateDirectory/test.docx', $data, 'prueba1');
@@ -20,7 +21,7 @@ try {
     echo '</pre>';
 
     //dynamic configuration
-    $WordReplacerWrapper->setData(['field1' => 'sebastian']);
+    $WordReplacerWrapper->setData(['field1' => new Text('sebastian')]);
     $WordReplacerWrapper->setTemporalDir('prueba2');
     $routes = $WordReplacerWrapper->replaceData();
 

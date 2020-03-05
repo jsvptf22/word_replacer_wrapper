@@ -4,6 +4,8 @@
 namespace Jsvptf\WordReplacerWrapper;
 
 
+use Exception;
+use Jsvptf\WordReplacerWrapper\types\IType;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 use PhpOffice\PhpWord\TemplateProcessor;
@@ -19,6 +21,11 @@ class DataProcessor
      * @var array
      */
     private array $data;
+
+    /**
+     * @var TemplateProcessor
+     */
+    private TemplateProcessor $TemplateProcessor;
 
     /**
      * DataProcessor constructor.
@@ -37,6 +44,7 @@ class DataProcessor
      * @return string
      * @throws CopyFileException
      * @throws CreateTemporaryFileException
+     * @throws Exception
      * @date 2020-03-05
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      */
@@ -45,11 +53,29 @@ class DataProcessor
             $output = $this->template;
         }
 
-        $TemplateProcessor = new TemplateProcessor($this->template);
-        $TemplateProcessor->setValues($this->data);
-        $TemplateProcessor->saveAs($output);
+        $this->TemplateProcessor = new TemplateProcessor($this->template);
+        self::setData($this->data, $this->TemplateProcessor);
+        $this->TemplateProcessor->saveAs($output);
 
         return $output;
+    }
+
+    /**
+     * add element data TemplateProcessor
+     * @param $data
+     * @param $TemplateProcessor
+     * @return void
+     * @date 2020-03-05
+     * @throws Exception
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    public static function setData($data, &$TemplateProcessor){
+        foreach ($data as $key => $element){
+            if(!$element instanceof  IType){
+                throw new Exception("{$key} is not a IType element");
+            }
+            $element->setTo($TemplateProcessor, $key);
+        }
     }
 
     /**
