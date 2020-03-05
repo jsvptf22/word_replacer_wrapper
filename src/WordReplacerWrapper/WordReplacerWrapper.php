@@ -181,11 +181,8 @@ class WordReplacerWrapper
         $temporal = sprintf("%s/%s", $this->temporalDir, $template);
         $document = sprintf("%s/document_%s", $this->temporalDir, $template);
 
-        $templateProcessor = new TemplateProcessor($temporal);
-        $templateProcessor->setValues($this->data);
-        $templateProcessor->saveAs($document);
-
-        return basename($document);
+        $file = DataProcessor::replace($temporal, $this->data, $document);
+        return basename($file);
     }
 
     /**
