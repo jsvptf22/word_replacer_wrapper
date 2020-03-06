@@ -70,7 +70,7 @@ class Table implements IType, ITypeTableChild
     }
 
     /**
-     * ${CARET}
+     * create a table structure
      * @param \PhpOffice\PhpWord\Element\Table $Table
      * @return void
      * @date 2020-03-05
