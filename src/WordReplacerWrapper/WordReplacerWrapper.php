@@ -9,11 +9,9 @@ use NcJoes\OfficeConverter\OfficeConverter;
 use NcJoes\OfficeConverter\OfficeConverterException;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
-use PhpOffice\PhpWord\TemplateProcessor;
 
 class WordReplacerWrapper
 {
-
     /**
      * instance of Filesystem
      *
@@ -24,6 +22,11 @@ class WordReplacerWrapper
     protected Filesystem $Filesystem;
 
     /**
+     * @var DataProcessor|null
+     */
+    protected ?DataProcessor $DataProcessor = null;
+
+    /**
      * route to template
      *
      * @var string
@@ -31,15 +34,6 @@ class WordReplacerWrapper
      * @date 2020
      */
     protected string $templateRoute;
-
-    /**
-     * directory to save files
-     *
-     * @var string
-     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
-     * @date 2020
-     */
-    protected string $temporalDir;
 
     /**
      * data to replace
@@ -55,7 +49,7 @@ class WordReplacerWrapper
      *
      * @param string $templateRoute
      * @param array $data
-     * @param string|null $temporalDir
+     * @param string|null $workspace
      * @throws Exception
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
@@ -63,33 +57,70 @@ class WordReplacerWrapper
     public function __construct(
         string $templateRoute,
         array $data = [],
-        string $temporalDir = null
+        string $workspace = null
     )
     {
-        $this->setTemporalDir($temporalDir);
+        $this->setWorkspace($workspace);
         $this->setTemplate($templateRoute);
         $this->setData($data);
     }
 
     /**
-     * define the temporal directory
-     *
-     * @param string $temporalDir
-     * @return boolean
-     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
-     * @date 2020
+     * @param string $template
+     * @return DataProcessor|null
      */
-    public function setTemporalDir(string $temporalDir = null)
+    public function getDataProcessor(string $template): ?DataProcessor
     {
-        if (!$temporalDir) {
-            $temporalDir = sys_get_temp_dir();
+        $DataProcessor = $this->DataProcessor;
+
+        if ($this->DataProcessor instanceof DataProcessor) {
+            $DataProcessor->setTemplate($template);
+            $DataProcessor->setData($this->getData());
+        } else {
+            $DataProcessor = new DataProcessor($template, $this->getData());
         }
 
-        if (RouteVerifier::checkDirectory($temporalDir)) {
-            $this->temporalDir = $temporalDir;
-        }
+        $this->setDataProcessor($DataProcessor);
 
-        return true;
+        return $this->DataProcessor;
+    }
+
+    /**
+     * @param DataProcessor|null $DataProcessor
+     */
+    public function setDataProcessor(?DataProcessor $DataProcessor): void
+    {
+        $this->DataProcessor = $DataProcessor;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function setData(array $data): void
+    {
+        $this->data = $data;
+    }
+
+
+    /**
+     * define temporal directory to save files
+     * @param string $workspace
+     * @return void
+     * @throws Exception
+     * @date 2020-03-07
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    public function setWorkspace(string $workspace): void
+    {
+        Settings::setWorkspace($workspace);
     }
 
     /**
@@ -112,19 +143,6 @@ class WordReplacerWrapper
     }
 
     /**
-     * define data to replace
-     *
-     * @param array $data
-     * @return array
-     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
-     * @date 2020
-     */
-    public function setData(array $data)
-    {
-        return $this->data = $data;
-    }
-
-    /**
      * make a document based on template
      *
      * @return array
@@ -136,14 +154,14 @@ class WordReplacerWrapper
      */
     public function replaceData()
     {
-        $template = $this->generateTemporalTemplate();
-        $document = $this->processTemplate($template);
+        $temporalTemplate = $this->generateTemporalTemplate();
+        $document = $this->processTemplate($temporalTemplate);
         $pdf = $this->convertDocument($document);
 
         return [
-            'template' => sprintf("%s/%s", $this->temporalDir, $template),
-            'document' => sprintf("%s/%s", $this->temporalDir, $document),
-            'pdf' => sprintf("%s/%s", $this->temporalDir, $pdf),
+            'template' => $temporalTemplate,
+            'document' => $document,
+            'pdf' => $pdf
         ];
     }
 
@@ -159,11 +177,12 @@ class WordReplacerWrapper
         $filename = basename($this->templateRoute);
         $content = file_get_contents($this->templateRoute);
 
-        $adapter = new LocalAdapter($this->temporalDir);
+        $workspace = Settings::getWorkspace();
+        $adapter = new LocalAdapter($workspace);
         $this->Filesystem = new Filesystem($adapter);
         $this->Filesystem->write($filename, $content, true);
 
-        return $filename;
+        return sprintf("%s/%s", $workspace, $filename);
     }
 
     /**
@@ -176,13 +195,11 @@ class WordReplacerWrapper
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
-    public function processTemplate(string $template)
+    protected function processTemplate(string $template)
     {
-        $temporal = sprintf("%s/%s", $this->temporalDir, $template);
-        $document = sprintf("%s/document_%s", $this->temporalDir, $template);
-
-        $file = DataProcessor::replace($temporal, $this->data, $document);
-        return basename($file);
+        $output = sprintf("%s/document.docx", Settings::getWorkspace());
+        $DataProcessor = $this->getDataProcessor($template);
+        return $DataProcessor->generateFile($output);
     }
 
     /**
@@ -196,14 +213,14 @@ class WordReplacerWrapper
      */
     protected function convertDocument(string $document)
     {
-        $temporal = sprintf("%s/%s", $this->temporalDir, $document);
-        $filename = pathinfo($document, PATHINFO_FILENAME);
-        $newName = "{$filename}.pdf";
+        $workspace = Settings::getWorkspace();
+        $filename = basename($document);
+        $destination = "{$filename}.pdf";
 
-        $converter = new OfficeConverter($temporal);
-        $converter->convertTo($newName);
+        $converter = new OfficeConverter($document, $workspace);
+        $converter->convertTo($destination);
 
-        return $newName;
+        return sprintf("%s/%s", $workspace, $destination);
     }
 
     /**

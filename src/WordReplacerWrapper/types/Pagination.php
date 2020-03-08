@@ -6,6 +6,7 @@ namespace Jsvptf\WordReplacerWrapper\types;
 
 use PhpOffice\PhpWord\Element\Cell;
 use PhpOffice\PhpWord\SimpleType\TblWidth;
+use PhpOffice\PhpWord\Style\Table as TableAlias;
 use PhpOffice\PhpWord\TemplateProcessor;
 
 class Pagination extends Text
@@ -16,7 +17,7 @@ class Pagination extends Text
     public function setTo(TemplateProcessor &$templateProcessor, string $key)
     {
         $Table = new \PhpOffice\PhpWord\Element\Table([
-            'layout' => \PhpOffice\PhpWord\Style\Table::LAYOUT_FIXED,
+            'layout' => TableAlias::LAYOUT_FIXED,
             'width' => TblWidth::AUTO,
             'borderSize' => 0,
             'borderColor' => 'ffffff'

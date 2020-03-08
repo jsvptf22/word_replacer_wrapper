@@ -1,5 +1,6 @@
 <?php
 
+use Jsvptf\WordReplacerWrapper\types\HtmlHeader;
 use Jsvptf\WordReplacerWrapper\types\Image;
 use Jsvptf\WordReplacerWrapper\types\Pagination;
 use Jsvptf\WordReplacerWrapper\types\Table;
@@ -10,11 +11,11 @@ require __DIR__ . '/../vendor/autoload.php';
 
 try {
     $nestedTableData = [
-    [
-        new Text('a'),
-        new Image('./images/test.png', 80, 80),
-        new Text('c'),
-    ],
+        [
+            new Text('a'),
+            new Image('./images/test.png', 80, 80),
+            new Text('c'),
+        ],
         [
             new Text('d'),
             new Table([
@@ -28,8 +29,7 @@ try {
                     new Image('./images/test.png', 180, 180),
                     new Text('y'),
                 ]
-            ]),
-            new Text('f'),
+            ]), new Text('f'),
         ]
     ];
 
@@ -47,8 +47,10 @@ try {
     ];
     //default configuration
     $data = [
-        'field1' => new Text('xxxxxxxxxxx'),
-        'field2' => new Table($tableData),
+        'header' => new HtmlHeader('<div>pruebas con header ${field2}</div>'),
+        'footer' => new HtmlHeader('<div>pruebas ${field3} con footer ${field4}</div>'),
+        'field2' => new Text('xxxxxxxxxxx'),
+        //'field1' => new Table($tableData),
         'field3' => new Image('./images/test.png', 80, 80),
         'field4' => new Pagination('Page {PAGE} of {NUMPAGES}.')
     ];
@@ -62,14 +64,14 @@ try {
 
     //dynamic configuration
     $WordReplacerWrapper->setData(['field1' => new Text('sebastian')]);
-    $WordReplacerWrapper->setTemporalDir('prueba2');
+    $WordReplacerWrapper->setWorkspace('prueba2');
     $routes = $WordReplacerWrapper->replaceData();
 
     echo '<pre>';
     var_dump($routes);
     echo '</pre>';
-} catch (Exception $e) {
-    var_dump($e->getMessage());
+} catch (Throwable $th) {
+    var_dump($th);
     exit;
 }
 
