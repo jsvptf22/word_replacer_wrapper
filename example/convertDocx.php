@@ -1,6 +1,5 @@
 <?php
 
-use Jsvptf\WordReplacerWrapper\types\HtmlHeader;
 use Jsvptf\WordReplacerWrapper\types\Image;
 use Jsvptf\WordReplacerWrapper\types\Pagination;
 use Jsvptf\WordReplacerWrapper\types\Table;
@@ -41,16 +40,16 @@ try {
         ],
         [
             new Text('d'),
-            new Table($nestedTableData),
+            new Image('./images/test.png', 80, 80),
             new Pagination('Page {PAGE} of {NUMPAGES}.'),
         ]
     ];
     //default configuration
     $data = [
-        'header' => new HtmlHeader('<div>pruebas con header ${field2}</div>'),
-        'footer' => new HtmlHeader('<div>pruebas ${field3} con footer ${field4}</div>'),
+        'header' => new Table($tableData),
+        'footer' => new Table($tableData),
         'field2' => new Text('xxxxxxxxxxx'),
-        //'field1' => new Table($tableData),
+        'field1' => new Table($tableData),
         'field3' => new Image('./images/test.png', 80, 80),
         'field4' => new Pagination('Page {PAGE} of {NUMPAGES}.')
     ];

@@ -4,10 +4,8 @@
 namespace Jsvptf\WordReplacerWrapper;
 
 
-use Jsvptf\WordReplacerWrapper\types\HtmlHeader;
-use PhpOffice\PhpWord\Element\Section;
+use Jsvptf\WordReplacerWrapper\types\Table;
 use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\Shared\Html;
 
 class HeaderGenerator
 {
@@ -22,29 +20,29 @@ class HeaderGenerator
     protected string $filename;
 
     /**
-     * @var HtmlHeader
+     * @var Table
      */
-    protected HtmlHeader $htmlHeader;
+    protected Table $TableHeader;
 
     /**
-     * @var HtmlHeader
+     * @var Table
      */
-    protected HtmlHeader $htmlFooter;
+    protected Table $TableFooter;
 
     /**
      * HeaderGenerator constructor.
-     * @param HtmlHeader $htmlHeader
-     * @param HtmlHeader $htmlFooter
+     * @param Table $TableHeader
+     * @param Table $TableFooter
      * @param string $filename
      */
     public function __construct(
-        HtmlHeader $htmlHeader = null,
-        HtmlHeader $htmlFooter = null,
+        Table $TableHeader = null,
+        Table $TableFooter = null,
         string $filename = null
     )
     {
-        $this->setHtmlHeader($htmlHeader);
-        $this->setHtmlFooter($htmlFooter);
+        $this->setTableHeader($TableHeader);
+        $this->setTableFooter($TableFooter);
         $this->setFilename($filename);
     }
 
@@ -69,35 +67,35 @@ class HeaderGenerator
     }
 
     /**
-     * @return HtmlHeader
+     * @return Table
      */
-    public function getHtmlHeader(): HtmlHeader
+    public function getTableHeader(): Table
     {
-        return $this->htmlHeader;
+        return $this->TableHeader;
     }
 
     /**
-     * @param HtmlHeader $htmlHeader
+     * @param Table $TableHeader
      */
-    public function setHtmlHeader(HtmlHeader $htmlHeader): void
+    public function setTableHeader(Table $TableHeader): void
     {
-        $this->htmlHeader = $htmlHeader;
+        $this->TableHeader = $TableHeader;
     }
 
     /**
-     * @return HtmlHeader
+     * @return Table
      */
-    public function getHtmlFooter(): HtmlHeader
+    public function getTableFooter(): Table
     {
-        return $this->htmlFooter;
+        return $this->TableFooter;
     }
 
     /**
-     * @param HtmlHeader $htmlFooter
+     * @param Table $TableFooter
      */
-    public function setHtmlFooter(HtmlHeader $htmlFooter): void
+    public function setTableFooter(Table $TableFooter): void
     {
-        $this->htmlFooter = $htmlFooter;
+        $this->TableFooter = $TableFooter;
     }
 
     /**
@@ -111,15 +109,17 @@ class HeaderGenerator
         $PhpWord = new PhpWord();
         $Section = $PhpWord->addSection();
 
-        $htmlHeader = $this->getHtmlHeader();
-        $htmlFooter = $this->getHtmlFooter();
+        $tableHeader = $this->getTableHeader();
+        $tableFooter = $this->getTableFooter();
 
-        if ($htmlHeader) {
-            $this->addHeader($Section, $htmlHeader);
+        if ($tableHeader) {
+            $Table = $Section->addHeader()->addTable();
+            $tableHeader->generateTable($Table);
         }
 
-        if ($htmlFooter) {
-            $this->addFooter($Section, $htmlFooter);
+        if ($tableFooter) {
+            $Table = $Section->addFooter()->addTable();
+            $tableFooter->generateTable($Table);
         }
 
         $output = sprintf(
@@ -130,43 +130,5 @@ class HeaderGenerator
         $PhpWord->save($output);
 
         return $output;
-    }
-
-    /**
-     * add Header to Section
-     * @param Section $Section
-     * @param HtmlHeader $htmlHeader
-     * @return void
-     * @date 2020-03-07
-     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
-     */
-    protected function addHeader(Section $Section, HtmlHeader $htmlHeader): void
-    {
-        $Header = $Section->addHeader();
-        Html::addHtml(
-            $Header,
-            $htmlHeader->getText(),
-            false,
-            false
-        );
-    }
-
-    /**
-     * add Footer to Section
-     * @param Section $Section
-     * @param HtmlHeader $htmlFooter
-     * @return void
-     * @date 2020-03-07
-     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
-     */
-    protected function addFooter(Section $Section, HtmlHeader $htmlFooter): void
-    {
-        $Footer = $Section->addFooter();
-        Html::addHtml(
-            $Footer,
-            $htmlFooter->getText(),
-            false,
-            false
-        );
     }
 }

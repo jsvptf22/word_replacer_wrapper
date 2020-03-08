@@ -5,8 +5,8 @@ namespace Jsvptf\WordReplacerWrapper;
 
 
 use Exception;
-use Jsvptf\WordReplacerWrapper\types\HtmlHeader;
 use Jsvptf\WordReplacerWrapper\types\IType;
+use Jsvptf\WordReplacerWrapper\types\Table;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 use PhpOffice\PhpWord\TemplateProcessor;
@@ -24,14 +24,14 @@ class DataProcessor
     protected array $data;
 
     /**
-     * @var HtmlHeader
+     * @var Table
      */
-    protected HtmlHeader $htmlHeader;
+    protected Table $TableHeader;
 
     /**
-     * @var HtmlHeader
+     * @var Table
      */
-    protected HtmlHeader $htmlFooter;
+    protected Table $TableFooter;
 
     /**
      * @var TemplateProcessor
@@ -82,12 +82,12 @@ class DataProcessor
     public function setData(array $data): void
     {
         if (isset($data['header'])) {
-            $this->setHtmlHeader($data['header']);
+            $this->setTableHeader($data['header']);
             unset($data['header']);
         }
 
         if (isset($data['footer'])) {
-            $this->setHtmlFooter($data['footer']);
+            $this->setTableFooter($data['footer']);
             unset($data['footer']);
         }
 
@@ -95,35 +95,35 @@ class DataProcessor
     }
 
     /**
-     * @return HtmlHeader
+     * @return Table
      */
-    public function getHtmlHeader(): HtmlHeader
+    public function getTableHeader(): Table
     {
-        return $this->htmlHeader;
+        return $this->TableHeader;
     }
 
     /**
-     * @param HtmlHeader $htmlHeader
+     * @param Table $TableHeader
      */
-    public function setHtmlHeader(HtmlHeader $htmlHeader): void
+    public function setTableHeader(Table $TableHeader): void
     {
-        $this->htmlHeader = $htmlHeader;
+        $this->TableHeader = $TableHeader;
     }
 
     /**
-     * @return HtmlHeader
+     * @return Table
      */
-    public function getHtmlFooter(): HtmlHeader
+    public function getTableFooter(): Table
     {
-        return $this->htmlFooter;
+        return $this->TableFooter;
     }
 
     /**
-     * @param HtmlHeader $htmlFooter
+     * @param Table $TableFooter
      */
-    public function setHtmlFooter(HtmlHeader $htmlFooter): void
+    public function setTableFooter(Table $TableFooter): void
     {
-        $this->htmlFooter = $htmlFooter;
+        $this->TableFooter = $TableFooter;
     }
 
     /**
@@ -173,11 +173,11 @@ class DataProcessor
      */
     public function checkHeaders()
     {
-        $htmlHeader = $this->getHtmlHeader();
-        $htmlFooter = $this->getHtmlFooter();
+        $tableHeader = $this->getTableHeader();
+        $tableFooter = $this->getTableFooter();
 
-        if ($htmlHeader || $htmlFooter) {
-            $HeaderGenerator = new HeaderGenerator($htmlHeader, $htmlFooter);
+        if ($tableHeader || $tableFooter) {
+            $HeaderGenerator = new HeaderGenerator($tableHeader, $tableFooter);
             $headerFile = $HeaderGenerator->generateFile();
 
             $template = $this->mergeFiles($headerFile, $this->getTemplate());

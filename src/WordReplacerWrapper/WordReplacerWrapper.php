@@ -203,7 +203,7 @@ class WordReplacerWrapper
     }
 
     /**
-     * converts document to pdf and html
+     * converts document to pdf
      *
      * @param string $document
      * @return string

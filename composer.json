@@ -3,7 +3,7 @@
     "description": "realiza reemplazo de palabras en plantillas de word y realiza la conversion del archivo final a extensiones requeridas como pdf",
     "type": "library",
     "license": "MIT",
-    "version": "2.0.0",
+    "version": "2.2.0",
     "minimum-stability": "stable",
     "keywords": [
         "PHP",
@@ -25,6 +25,6 @@
         "knplabs/gaufrette": "^0.9.0",
         "phpoffice/phpword": "^0.17.0",
         "ncjoes/office-converter": "^1.0",
-      "ext-zip": "*"
+        "ext-zip": "*"
     }
 }

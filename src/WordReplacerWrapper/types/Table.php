@@ -39,9 +39,9 @@ class Table implements IType, ITypeTableChild
      */
     public function setData(array $data): void
     {
-        foreach ($data as $rowKey => $row){
-            foreach ($row as $cellKey => $element){
-                if(!$element instanceof ITypeTableChild){
+        foreach ($data as $rowKey => $row) {
+            foreach ($row as $cellKey => $element) {
+                if (!$element instanceof ITypeTableChild) {
                     throw new Exception("Invalid ITypeTableChild element {$rowKey} - {$cellKey}");
                 }
             }
@@ -76,7 +76,7 @@ class Table implements IType, ITypeTableChild
      * @date 2020-03-05
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      */
-    protected function generateTable(\PhpOffice\PhpWord\Element\Table $Table): void
+    public function generateTable(\PhpOffice\PhpWord\Element\Table $Table): void
     {
         foreach ($this->getData() as $rowKey => $row) {
             $Row = $Table->addRow();
