@@ -101,8 +101,7 @@ class Image implements IType, ITypeTableChild
      */
     public function setToCell(Cell &$Cell)
     {
-        $source = file_get_contents($this->getRoute());
-        $Cell->addImage($source, [
+        $Cell->addImage($this->getRoute(), [
             'width' => $this->getWidth(),
             'height' => $this->getHeight()
         ]);

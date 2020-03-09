@@ -8,7 +8,6 @@ use ZipArchive;
 
 class HeaderMerger
 {
-
     /**
      * default name for meged result
      */
@@ -78,6 +77,20 @@ class HeaderMerger
     }
 
     /**
+     * @return string
+     * @date 2020-03-08
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    protected function getUncompressedRoute(): string
+    {
+        return sprintf(
+            "%s/%s",
+            Settings::getWorkspace(),
+            'uncompressedHeader'
+        );
+    }
+
+    /**
      * add headers to template
      * @param string $output
      * @return string
@@ -91,32 +104,118 @@ class HeaderMerger
         }
 
         copy($this->getTemplateFile(), $output);
-        $uncompressedDir = sprintf(
-            "%s/%s",
-            Settings::getWorkspace(),
-            'uncompressedHeader' . rand()
-        );
+
+        $this->extractSource();
+        $this->moveFiles($output);
+
+        return $output;
+    }
+
+    /**
+     * extract a .docx file to get files
+     * @return void
+     * @date 2020-03-08
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    protected function extractSource(): void
+    {
+        $uncompressedDir = $this->getUncompressedRoute();
 
         $sourceZip = new ZipArchive();
         $sourceZip->open($this->getHeaderFile());
         $sourceZip->extractTo($uncompressedDir);
         $sourceZip->close();
+    }
 
+    /**
+     * @param string $output
+     * @return void
+     * @date 2020-03-08
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    protected function moveFiles(string $output): void
+    {
         $finalZip = new ZipArchive();
         $finalZip->open($output);
 
-        $headerRoute = $uncompressedDir . "/word/header1.xml";
+        $this->moveHeaders($finalZip);
+        $this->moveMedia($finalZip);
+        $this->moveRels($finalZip);
+
+        $finalZip->close();
+    }
+
+    /**
+     * move header1 and footer1 to zip
+     * @param ZipArchive $finalZip
+     * @return void
+     * @date 2020-03-08
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    protected function moveHeaders(ZipArchive &$finalZip): void
+    {
+        $headerRoute = $this->getUncompressedRoute() . "/word/header1.xml";
         if (is_file($headerRoute)) {
             $finalZip->addFile($headerRoute, 'word/header1.xml');
         }
 
-        $headerRoute = $uncompressedDir . "/word/footer1.xml";
+        $headerRoute = $this->getUncompressedRoute() . "/word/footer1.xml";
         if (is_file($headerRoute)) {
             $finalZip->addFile($headerRoute, 'word/footer1.xml');
         }
+    }
 
-        $finalZip->close();
+    /**
+     * move media files
+     * @param ZipArchive $finalZip
+     * @return void
+     * @date 2020-03-08
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    protected function moveMedia(ZipArchive &$finalZip): void
+    {
+        $mediaRoute = "word/media/";
+        $mediaDirectory = sprintf(
+            "%s/%s",
+            $this->getUncompressedRoute(),
+            $mediaRoute
+        );
 
-        return $output;
+        if (!is_dir($mediaDirectory)) {
+            return;
+        }
+
+        $files = scandir($mediaDirectory);
+
+        foreach ($files as $file) {
+            if ($file == '.' || $file == '..') {
+                continue;
+            }
+
+            $fileRoute = sprintf("%s/%s", $mediaDirectory, $file);
+            $destination = sprintf("%s/%s", $mediaRoute, $file);
+
+            $finalZip->addFile($fileRoute, $destination);
+        }
+    }
+
+    /**
+     * move footer and header rel files
+     * @param ZipArchive $finalZip
+     * @return void
+     * @date 2020-03-08
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    protected function moveRels(ZipArchive &$finalZip): void
+    {
+        $headerRoute = $this->getUncompressedRoute() . "/word/_rels/header1.xml.rels";
+        if (is_file($headerRoute)) {
+            $finalZip->addFile($headerRoute, 'word/_rels/header1.xml.rels');
+        }
+
+        $headerRoute = $this->getUncompressedRoute() . "/word/_rels/footer1.xml.rels";
+        if (is_file($headerRoute)) {
+            $finalZip->addFile($headerRoute, 'word/_rels/footer1.xml.rels');
+        }
     }
 }
