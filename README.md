@@ -26,7 +26,7 @@ Default configuration
     //template to process
     $template = 'templateDirectory/test.docx';
 
-#Define data to convert
+Define data to convert
     
     //array of ITypeTableChild elements
     $tableData = [
@@ -64,7 +64,7 @@ Default configuration
     ["pdf"]=>
       string(25) "testOne/document_test.pdf"
 
-#Dinamic configuration
+# Dinamic configuration
 
     $WordReplacerWrapper->setData(['field1' => new Text('sebastian')]);
     $WordReplacerWrapper->setTemporalDir('testTwo');
@@ -77,5 +77,15 @@ Default configuration
       string(26) "testTwo/document_test.docx"
     ["pdf"]=>
       string(25) "testTwo/document_test.pdf"
+      
+# Header and footer
+you must add header and footer key to data, implementing a Jsvptf\WordReplacerWrapper\types\Table class and the template file MUST has content on header and footer space, you can see it on     example/convertDocx.php
+
+    $data = [
+        'header' => new Table($tableData),
+        'footer' => new Table($tableData)
+        ...
+    ];
+    
 
 You can find the complete example on example directory
