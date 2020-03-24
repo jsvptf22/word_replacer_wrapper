@@ -3,8 +3,6 @@
 namespace Jsvptf\WordReplacerWrapper;
 
 use Exception;
-use Gaufrette\Adapter\Local;
-use Gaufrette\Filesystem;
 
 class RouteVerifier
 {
@@ -44,18 +42,27 @@ class RouteVerifier
      *
      * @param string $directory
      * @return boolean
+     * @throws Exception
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public static function checkDirectory(string $directory)
     {
-        //open or create folder
-        $adapter = new Local($directory, true);
-        $Filesystem = new Filesystem($adapter);
+        $directory = trim($directory, '/');
 
-        //check permissions
-        $Filesystem->write('test.txt', '', true);
-        $Filesystem->delete('test.txt');
+        if (!is_dir($directory)) {
+            mkdir($directory, 0777, true);
+        } else {
+            chmod($directory, 0777);
+        }
+
+        $file = $directory . "/test.txt";
+
+        if (!is_dir($directory) || file_put_contents($file, '') === false) {
+            throw new Exception("Invalid directory {$directory}", 1);
+        } else {
+            unlink($file);
+        }
 
         return true;
     }

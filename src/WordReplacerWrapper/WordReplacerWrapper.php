@@ -3,8 +3,6 @@
 namespace Jsvptf\WordReplacerWrapper;
 
 use Exception;
-use Gaufrette\Adapter\Local as LocalAdapter;
-use Gaufrette\Filesystem;
 use NcJoes\OfficeConverter\OfficeConverter;
 use NcJoes\OfficeConverter\OfficeConverterException;
 use PhpOffice\PhpWord\Exception\CopyFileException;
@@ -12,15 +10,6 @@ use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
 
 class WordReplacerWrapper
 {
-    /**
-     * instance of Filesystem
-     *
-     * @var Filesystem
-     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
-     * @date 2020
-     */
-    protected Filesystem $Filesystem;
-
     /**
      * @var DataProcessor|null
      */
@@ -149,6 +138,7 @@ class WordReplacerWrapper
      * @throws CopyFileException
      * @throws CreateTemporaryFileException
      * @throws OfficeConverterException
+     * @throws Exception
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
@@ -169,20 +159,23 @@ class WordReplacerWrapper
      * copy template to temporal directory
      *
      * @return string
+     * @throws Exception
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
      */
     public function generateTemporalTemplate()
     {
+        $workspace = Settings::getWorkspace();
         $filename = basename($this->templateRoute);
+        $route = sprintf("%s/%s", $workspace, $filename);
+
         $content = file_get_contents($this->templateRoute);
 
-        $workspace = Settings::getWorkspace();
-        $adapter = new LocalAdapter($workspace);
-        $this->Filesystem = new Filesystem($adapter);
-        $this->Filesystem->write($filename, $content, true);
+        if (!file_put_contents($route, $content)) {
+            throw new Exception("Error al copiar la plantilla");
+        }
 
-        return sprintf("%s/%s", $workspace, $filename);
+        return $route;
     }
 
     /**
