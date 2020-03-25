@@ -26,12 +26,12 @@ class DataProcessor
     /**
      * @var Table
      */
-    protected Table $TableHeader;
+    protected ?Table $TableHeader = null;
 
     /**
      * @var Table
      */
-    protected Table $TableFooter;
+    protected ?Table $TableFooter = null;
 
     /**
      * @var TemplateProcessor
@@ -95,9 +95,9 @@ class DataProcessor
     }
 
     /**
-     * @return Table
+     * @return Table|null
      */
-    public function getTableHeader(): Table
+    public function getTableHeader()
     {
         return $this->TableHeader;
     }
@@ -111,9 +111,9 @@ class DataProcessor
     }
 
     /**
-     * @return Table
+     * @return Table|null
      */
-    public function getTableFooter(): Table
+    public function getTableFooter()
     {
         return $this->TableFooter;
     }

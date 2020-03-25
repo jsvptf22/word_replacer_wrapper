@@ -108,7 +108,7 @@ class WordReplacerWrapper
      * @date 2020-03-07
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      */
-    public function setWorkspace(string $workspace): void
+    public function setWorkspace(string $workspace = null): void
     {
         Settings::setWorkspace($workspace);
     }
