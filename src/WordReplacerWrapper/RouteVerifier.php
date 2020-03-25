@@ -8,6 +8,11 @@ class RouteVerifier
 {
 
     /**
+     * accepted file extensions
+     */
+    const ACCEPTED_EXTENSIONS = ['docx'];
+
+    /**
      * template file verifications
      *
      * @param string $fileRoute
@@ -17,7 +22,7 @@ class RouteVerifier
      * @date 2020
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      */
-    public static function checkFile(string $fileRoute, array $acceptedExtensions = [])
+    public static function checkFile(string $fileRoute)
     {
         if (!is_file($fileRoute)) {
             throw new Exception("The file does not exists", 1);
@@ -25,7 +30,7 @@ class RouteVerifier
 
         $extension = pathinfo($fileRoute, PATHINFO_EXTENSION);
 
-        if (!in_array($extension, $acceptedExtensions)) {
+        if (!in_array($extension, self::ACCEPTED_EXTENSIONS)) {
             throw new Exception("Invalid file extension", 1);
         }
 

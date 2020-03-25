@@ -55,6 +55,7 @@ try {
     ];
 
     $WordReplacerWrapper = new WordReplacerWrapper('templateDirectory/test.docx', $data, 'prueba1');
+    var_dump($WordReplacerWrapper->getRequiredFields());
     $routes = $WordReplacerWrapper->replaceData();
 
     echo '<pre>';

@@ -7,6 +7,7 @@ use NcJoes\OfficeConverter\OfficeConverter;
 use NcJoes\OfficeConverter\OfficeConverterException;
 use PhpOffice\PhpWord\Exception\CopyFileException;
 use PhpOffice\PhpWord\Exception\CreateTemporaryFileException;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class WordReplacerWrapper
 {
@@ -124,7 +125,7 @@ class WordReplacerWrapper
      */
     public function setTemplate(string $templateRoute)
     {
-        if (RouteVerifier::checkFile($templateRoute, self::acceptedExtensions())) {
+        if (RouteVerifier::checkFile($templateRoute)) {
             $this->templateRoute = $templateRoute;
         }
 
@@ -217,14 +218,18 @@ class WordReplacerWrapper
     }
 
     /**
-     * accepted template extensions
-     *
-     * @return array
+     * get the required variables to replace
+     * @return string[]
+     * @throws CopyFileException
+     * @throws CreateTemporaryFileException
+     * @throws Exception
+     * @date 2020-03-25
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
-     * @date 2020
      */
-    public static function acceptedExtensions()
+    public function getRequiredFields()
     {
-        return ['docx'];
+        $temporalTemplate = $this->generateTemporalTemplate();
+        $TemplateProcessor = new TemplateProcessor($temporalTemplate);
+        return $TemplateProcessor->getVariables();
     }
 }

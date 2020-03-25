@@ -65,6 +65,20 @@ Define data to convert
       string(25) "testOne/document_test.pdf"
 
 # Dinamic configuration
+    //if you want to know the required variables you can use  
+    $fields = $WordReplacerWrapper->getRequiredFields()
+    
+    //$fields
+    array(7) {
+      [0]=>
+      string(6) "field1"
+      [1]=>
+      string(6) "field3"
+      [5]=>
+      string(6) "header"
+      [6]=>
+      string(6) "footer"
+    }
 
     $WordReplacerWrapper->setData(['field1' => new Text('sebastian')]);
     $WordReplacerWrapper->setTemporalDir('testTwo');
