@@ -39,6 +39,11 @@ class DataProcessor
     protected TemplateProcessor $TemplateProcessor;
 
     /**
+     * @var array
+     */
+    public static array $dynamicElements = [];
+
+    /**
      * DataProcessor constructor.
      * @param string $template
      * @param array $data
@@ -211,17 +216,29 @@ class DataProcessor
      */
     protected function replaceVars()
     {
-        foreach ($this->getData() as $key => $element) {
+        $TemplatePlateProcessor = $this->getTemplateProcessor();
+        $this->replaceElements($TemplatePlateProcessor, $this->getData());
+        $this->replaceElements($TemplatePlateProcessor, self::$dynamicElements);
+        $this->setTemplateProcessor($TemplatePlateProcessor);
+    }
+
+    /**
+     * add elements to template
+     * @param TemplateProcessor $TemplateProcessor
+     * @param array $data
+     * @return void
+     * @throws Exception
+     * @date 2020-03-26
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     */
+    protected function replaceElements(TemplateProcessor &$TemplateProcessor, array $data)
+    {
+        foreach ($data as $key => $element) {
             if (!$element instanceof IType) {
                 throw new Exception("{$key} is not a IType element");
             }
 
-            $TemplatePlateProcessor = $this->getTemplateProcessor();
-            $element->setTo($TemplatePlateProcessor, $key);
-        }
-
-        if (isset($TemplatePlateProcessor)) {
-            $this->setTemplateProcessor($TemplatePlateProcessor);
+            $element->setTo($TemplateProcessor, $key);
         }
     }
 }

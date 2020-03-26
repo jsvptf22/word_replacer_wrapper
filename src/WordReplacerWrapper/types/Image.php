@@ -4,6 +4,7 @@
 namespace Jsvptf\WordReplacerWrapper\types;
 
 
+use Jsvptf\WordReplacerWrapper\DataProcessor;
 use PhpOffice\PhpWord\Element\Cell;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -101,9 +102,9 @@ class Image implements IType, ITypeTableChild
      */
     public function setToCell(Cell &$Cell)
     {
-        $Cell->addImage($this->getRoute(), [
-            'width' => $this->getWidth(),
-            'height' => $this->getHeight()
-        ]);
+        $variable = uniqid('image');
+        $Cell->addText('${' . $variable . '}');
+
+        DataProcessor::$dynamicElements[$variable] = $this;
     }
 }
