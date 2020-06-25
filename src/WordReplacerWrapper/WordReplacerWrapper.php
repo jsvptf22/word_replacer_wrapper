@@ -35,24 +35,35 @@ class WordReplacerWrapper
     protected array $data;
 
     /**
-     * initial configuration
-     *
-     * @param string $templateRoute
-     * @param array $data
-     * @param string|null $workspace
-     * @throws Exception
+     * defines the libreoffice binary
+     * @var string
      * @author jhon sebastian valencia <sebasjsv97@gmail.com>
      * @date 2020
+     */
+    protected string $libreofficeBin;
+
+    /**
+     * initial configuration
+     *
+     * @param string      $templateRoute
+     * @param array       $data
+     * @param string|null $workspace
+     * @param string      $libreofficeBin
+     * @throws Exception
+     * @author jhon sebastian valencia <sebasjsv97@gmail.com>
+     * @date   2020
      */
     public function __construct(
         string $templateRoute,
         array $data = [],
-        string $workspace = null
+        string $workspace = null,
+        string $libreofficeBin = 'libreoffice'
     )
     {
         $this->setWorkspace($workspace);
         $this->setTemplate($templateRoute);
         $this->setData($data);
+        $this->libreofficeBin = $libreofficeBin;
     }
 
     /**
@@ -211,7 +222,11 @@ class WordReplacerWrapper
         $filename = basename($document);
         $destination = "{$filename}.pdf";
 
-        $converter = new OfficeConverter($document, $workspace);
+        $converter = new OfficeConverter(
+            $document,
+            $workspace,
+            $this->libreofficeBin
+        );
         $converter->convertTo($destination);
 
         return sprintf("%s/%s", $workspace, $destination);

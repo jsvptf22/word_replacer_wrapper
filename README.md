@@ -50,8 +50,13 @@ Define data to convert
 
     //folder for create files
     $temporalDirectory = 'testOne';
-
-    $WordReplacerWrapper = new WordReplacerWrapper($template, $data, $temporalDirectory);
+    
+    $WordReplacerWrapper = new WordReplacerWrapper(
+        'templateDirectory/test.docx', //docx template
+        $data, //data to replace
+        'prueba1', //destination folder
+        'libreoffice' //libreoffice binary
+    );
 
     //execute replace and convert to pdf
     $routes = $WordReplacerWrapper->replaceData();
