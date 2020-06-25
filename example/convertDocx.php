@@ -54,7 +54,12 @@ try {
         'field4' => new Pagination('Page {PAGE} of {NUMPAGES}.')
     ];
 
-    $WordReplacerWrapper = new WordReplacerWrapper('templateDirectory/test.docx', $data, 'prueba1');
+    $WordReplacerWrapper = new WordReplacerWrapper(
+        'templateDirectory/test.docx', //docx template
+        $data, //data to replace
+        'prueba1', //destination folder
+        'libreoffice' //libreoffice binary
+    );
     var_dump($WordReplacerWrapper->getRequiredFields());
     $routes = $WordReplacerWrapper->replaceData();
 
