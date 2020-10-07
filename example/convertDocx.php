@@ -48,10 +48,15 @@ try {
     $data = [
         'header' => new Table($tableData),
         'footer' => new Table($tableData),
-        'field2' => new Text('jorge'),
+        'field2' => new Text('other word'),
         //'field1' => new Table($tableData),
         'field3' => new Image('./images/test.png', 80, 80),
-        'field4' => new Pagination('Page {PAGE} of {NUMPAGES}.')
+        'field4' => new Pagination('Page {PAGE} of {NUMPAGES}.'),
+        'styleText' => new Text('some with style', [
+            'size' => 20,
+            'bold' => true,
+            'name' => 'Courier New'
+        ])
     ];
 
     $WordReplacerWrapper = new WordReplacerWrapper(

@@ -46,6 +46,12 @@ Define data to convert
         'field1' => new Text('xxxxxxxxxxx'),
         'field2' => new Table($tableData),
         'field3' => new Image('./images/test.png', 80, 80),
+        'field4' => new Pagination('Page {PAGE} of {NUMPAGES}.'),
+        'styleText' => new Text('some with style', [
+            'size' => 20,
+            'bold' => true,
+            'name' => 'Courier New'
+        ])
     ];
 
     //folder for create files

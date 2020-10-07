@@ -14,9 +14,15 @@ class Text implements IType, ITypeTableChild
      */
     protected string $text;
 
-    public function __construct(string $text)
+    /**
+     * @var array
+     */
+    protected array $style;
+
+    public function __construct(string $text, array $style = [])
     {
         $this->setText($text);
+        $this->setStyle($style);
     }
 
     /**
@@ -36,12 +42,35 @@ class Text implements IType, ITypeTableChild
     }
 
     /**
+     * @return array
+     */
+    public function getStyle(): array
+    {
+        return $this->style;
+    }
+
+    /**
+     * @param array $style
+     */
+    public function setStyle(array $style): void
+    {
+        $this->style = $style;
+    }
+
+    /**
      * @inheritDoc
      */
     public function setTo(TemplateProcessor &$templateProcessor, string $key)
     {
         $value = $this->getText();
-        $templateProcessor->setValue($key, $value);
+        $style = $this->getStyle();
+
+        if($style){
+            $Text = new \PhpOffice\PhpWord\Element\Text($value, $style);
+            $templateProcessor->setComplexValue($key, $Text);
+        }else{
+            $templateProcessor->setValue($key, $value);
+        }
     }
 
     /**
@@ -50,6 +79,6 @@ class Text implements IType, ITypeTableChild
     public function setToCell(Cell &$Cell)
     {
         $text = $this->getText();
-        $Cell->addText($text);
+        $Cell->addText($text, $this->getStyle());
     }
 }
