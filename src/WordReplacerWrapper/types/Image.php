@@ -14,6 +14,7 @@ class Image implements IType, ITypeTableChild
      * @var string
      */
     protected string $route;
+    
     /**
      * @var int
      */
