@@ -21,7 +21,7 @@ class Text implements IType, ITypeTableChild
 
     public function __construct(string $text, array $style = [])
     {
-        $this->setText($text);
+        $this->setText(htmlspecialchars($text));
         $this->setStyle($style);
     }
 
